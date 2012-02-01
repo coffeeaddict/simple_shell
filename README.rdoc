@@ -1,9 +1,59 @@
-= simple_shell
+= SimpleShell
 
-Description goes here.
+A very simple, yet safe and sturdy wrapper around your shell.
 
-== Contributing to simple_shell
- 
+gives you stdout
+
+  shell = SimpleShell.new()
+  res = shell.ls
+  res.out
+  => a_file
+  b_file
+  c_file
+
+gives you stderr
+
+  res = shell.ls("/path/not/exists")
+  res.err
+  => "ls: cannot access /path/not/exists: No such file or directory"
+
+gives you exit value
+
+  res.S?
+  => #<Process::Status: pid 20743 exit 2>
+  shell.S?
+  => #<Process::Status: pid 20743 exit 2>
+
+gives you stdin
+
+  res = shell.sendmail("you@yourdomain.com") do |pipe|
+    pipe.puts message
+  end
+
+is tied to it's location
+
+  shell = SimpleShell.new("/tmp")
+  shell.ls
+  => # ... contents of tmp
+  shell.chdir "/home"
+  Errno::ENOENT:
+  Dir.chdir("/home")
+  shell.ls
+  => # ... still, contents of tmp
+
+provides you with a sub shell for location shifts
+
+  commands = shell.in("/home") do |sub|
+    sub.ls
+    sub.mkdir("joe")
+  end
+  commands.count
+  => 2
+  commands.last.S?
+  => #<Process::Status: pid 20760 exit 1>
+
+== Contributing to SimpleShell
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.
