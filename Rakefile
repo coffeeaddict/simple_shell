@@ -17,9 +17,9 @@ Jeweler::Tasks.new do |gem|
   gem.name = "simple_shell"
   gem.homepage = "http://github.com/coffeeaddict/simple_shell"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "hartog@3pconsulting.net"
+  gem.summary = %Q{A very simple shell operations gem}
+  gem.description = %Q{A very simple, smart & elegant shell operations gem}
+  gem.email = "hartog@organisedminds.com"
   gem.authors = ["Hartog C. de Mik"]
   # dependencies defined in Gemfile
 end
