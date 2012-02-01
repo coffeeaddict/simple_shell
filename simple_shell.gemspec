@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/simple_shell.rb",
+    "simple_shell.gemspec",
     "spec/simple_shell_spec.rb",
     "spec/spec_helper.rb"
   ]
