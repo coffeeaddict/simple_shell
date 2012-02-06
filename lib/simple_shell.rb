@@ -33,8 +33,14 @@ class SimpleShell
   #   SimpleShell.new
   #   SimpleShell.new("/path/to/base")
   #
-  def initialize(base=Dir.pwd)
+  def initialize(base=Dir.pwd, env={})
+    if base.is_a?(Hash)
+      env  = base
+      base = Dir.pwd
+    end
+
     @base     = base
+    @env      = env
     @commands = []
   end
 
@@ -49,7 +55,7 @@ class SimpleShell
   def in(dir, &block)
     dir = File.join(@base, dir) if !File.exists?(dir) || dir !~ /^\//
 
-    shell = SimpleShell.new(dir)
+    shell = SimpleShell.new(dir, @env)
     yield shell
     return shell.commands
   end
@@ -70,7 +76,7 @@ class SimpleShell
   def system(*args, &block)
     command = nil
     Dir.chdir(@base) do
-      command = Command.new(@base)
+      command = Command.new(@base, @env)
       command.execute(*args, &block)
     end
 
@@ -107,17 +113,19 @@ class SimpleShell
   class Command
     attr_reader :out, :err, :S
 
-    def initialize(base)
+    def initialize(base, env={})
       @base = base
+      @env  = env
+
       @out = ""
       @err = ""
       @S   = -1
     end
 
     def execute(command, *args, &block)
-      $stderr.puts("#{command}, #{args}, #{@base}") if SimpleShell.noisy
+      $stderr.puts("#{@env} #{command}, #{args}, #{@base}") if SimpleShell.noisy
 
-      Open3.popen3("#{command}", *(args.collect { |a| "#{a}" }) , :chdir => @base) do |stdin, stdout, stderr, thread|
+      Open3.popen3(@env, "#{command}", *(args.collect { |a| "#{a}" }) , :chdir => @base) do |stdin, stdout, stderr, thread|
         if block_given?
           yield stdin
         end

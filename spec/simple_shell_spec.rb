@@ -63,4 +63,12 @@ describe SimpleShell do
     SimpleShell.noisy = true
     SimpleShell.noisy.should be_true
   end
+
+  it "should allow for environment setting" do
+    shell = SimpleShell.new({ 'MY_ENV' => 'my environment' })
+    shell.printenv.out.should =~ /my environment/
+
+    shell = SimpleShell.new()
+    shell.printenv.out.should_not =~ /my environment/
+  end
 end

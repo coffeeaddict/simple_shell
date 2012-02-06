@@ -52,6 +52,12 @@ provides you with a sub shell for location shifts
   commands.last.S?
   => #<Process::Status: pid 20760 exit 1>
 
+lets you specify the environment
+
+  shell = SimpleShell.new(Dir.pwd, { 'MY_ENV' => 'my env' })
+  shell.echo '${MY_ENV}'
+  => 'my env'
+
 == Contributing to SimpleShell
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
