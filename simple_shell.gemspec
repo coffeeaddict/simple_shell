@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "simple_shell"
-  s.version = "1.0.1"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Hartog C. de Mik"]
-  s.date = "2012-02-06"
+  s.date = "2013-01-15"
   s.description = "A very simple, smart & elegant shell operations gem"
   s.email = "hartog@organisedminds.com"
   s.extra_rdoc_files = [
@@ -28,12 +28,15 @@ Gem::Specification.new do |s|
     "lib/simple_shell.rb",
     "simple_shell.gemspec",
     "spec/simple_shell_spec.rb",
-    "spec/spec_helper.rb"
+    "spec/spec_helper.rb",
+    "spec/support/echo.sh",
+    "spec/support/echo_stderr.sh",
+    "spec/support/long_running.sh"
   ]
   s.homepage = "http://github.com/coffeeaddict/simple_shell"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.11"
   s.summary = "A very simple shell operations gem"
 
   if s.respond_to? :specification_version then
