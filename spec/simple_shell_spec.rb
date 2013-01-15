@@ -62,6 +62,9 @@ describe SimpleShell do
   it "should be settable to noisy" do
     SimpleShell.noisy = true
     SimpleShell.noisy.should be_true
+
+    SimpleShell.noisy = false
+    SimpleShell.noisy.should be_false
   end
 
   it "should allow for environment setting" do
