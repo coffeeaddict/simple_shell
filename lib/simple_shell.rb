@@ -16,6 +16,17 @@ require 'open3'
 #  end
 #  puts commands.first.out
 #
+# === Handling stdout and stderr
+#
+#   shell = SimpleShell.new
+#   shell.stdout_handler = ->(line) {
+#     do_something(line)
+#   }
+#
+#   shell.do("./long_running.sh")
+#
+# Off course the same goes for ```shell.stderr_handler```
+#
 class SimpleShell
   attr_reader :commands, :base, :env
   attr_accessor :stdout_handler, :stderr_handler

@@ -55,8 +55,19 @@ provides you with a sub shell for location shifts
 lets you specify the environment
 
   shell = SimpleShell.new(Dir.pwd, { 'MY_ENV' => 'my env' })
-  shell.echo '${MY_ENV}'
+  shell.do "echo ${MY_ENV}"
   => 'my env'
+
+Provides parameter escaping
+
+  shell = SimpleShell.new(Dir.pwd, { 'MY_ENV' => "You wont see me" })
+  shell.echo '${MY_ENV}'
+  => '${MY_ENV}'
+
+  shell.ls "-la", "/path/to/list"
+  => total 87694
+  => drwxr-xr-x 106 john   doe       45056 Jan 15 08:43 ./
+  => ...
 
 == Contributing to SimpleShell
 
