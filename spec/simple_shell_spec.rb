@@ -74,4 +74,15 @@ describe SimpleShell do
     shell = SimpleShell.new()
     shell.printenv.out.should_not =~ /my environment/
   end
+
+  it "should capture stdout" do
+    res = shell.do("./spec/support/echo.sh")
+    res.out.should == "hello\nworld"
+  end
+
+  it "should capture stderr" do
+    res = shell.do("./spec/support/echo_stderr.sh")
+    res.err.should == "goodbye\nworld"
+  end
+
 end
