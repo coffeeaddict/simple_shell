@@ -18,6 +18,7 @@ require 'open3'
 #
 class SimpleShell
   attr_reader :commands, :base, :env
+  attr_accessor :stdout_handler, :stderr_handler
 
   def self.noisy
     @noisy ||= false
@@ -127,16 +128,34 @@ class SimpleShell
       $stderr.puts("#{@env} #{command}, #{args}, #{@base}") if SimpleShell.noisy
 
       Open3.popen3(@env, "#{command}", *(args.collect { |a| "#{a}" }) , :chdir => @base) do |stdin, stdout, stderr, thread|
+
+        threads = []
+        if @shell.stdout_handler
+          threads << Thread.new(@shell.stdout_handler, stdout) do |handler, io|
+            while(line = io.gets)
+              handler.call(line)
+            end
+          end
+        end
+
+        if @shell.stderr_handler
+          threads << Thread.new(@shell.stderr_handler, stderr) do |handler, io|
+            while(line = io.gets)
+              handler.call(line)
+            end
+          end
+        end
+
         if block_given?
           yield stdin
         end
 
         stdin.close
 
-        # TODO : perhaps use blocks to put stuff into stdin
+        threads.collect(&:join)
 
-        @out = stdout.read.chomp
-        @err = stderr.read.chomp
+        @out = @shell.stdout_handler ? nil : stdout.read.chomp
+        @err = @shell.stderr_handler ? nil : stderr.read.chomp
         @S   = thread.value rescue 0
       end
     end

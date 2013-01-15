@@ -1,5 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
+class Float
+  def at_least?(x)
+    self >= x
+  end
+end
+
 describe SimpleShell do
   let (:shell) { SimpleShell.new }
 
@@ -85,4 +91,45 @@ describe SimpleShell do
     res.err.should == "goodbye\nworld"
   end
 
+
+  describe "Handlers" do
+    it "should pass captured lines on stdout" do
+      buffer  = []
+      shell.stdout_handler = ->(line) {
+        buffer << line
+      }
+
+      res = shell.echo "hello\nworld"
+      res.out.should be_nil
+      res.err.should be_empty
+
+      buffer.count.should == 2
+    end
+
+    it "should pass captured lines on stderr" do
+      buffer  = []
+      shell.stderr_handler = ->(line) {
+        buffer << line
+      }
+
+      res = shell.do "./spec/support/echo_stderr.sh"
+      res.out.should be_empty
+      res.err.should be_nil
+
+      buffer.count.should == 2
+    end
+
+    it "should wait for long running processes" do
+      buffer = []
+      shell.stdout_handler = ->(line) {
+        buffer << line
+      }
+
+      start = Time.now
+      shell.do "./spec/support/long_running.sh"
+
+      (Time.now - start).should be_at_least 2
+      buffer.count.should == 3
+    end
+  end
 end
