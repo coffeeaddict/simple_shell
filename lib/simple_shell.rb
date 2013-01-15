@@ -17,7 +17,7 @@ require 'open3'
 #  puts commands.first.out
 #
 class SimpleShell
-  attr_reader :commands
+  attr_reader :commands, :base, :env
 
   def self.noisy
     @noisy ||= false
@@ -76,7 +76,7 @@ class SimpleShell
   def system(*args, &block)
     command = nil
     Dir.chdir(@base) do
-      command = Command.new(@base, @env)
+      command = Command.new(self)
       command.execute(*args, &block)
     end
 
@@ -113,9 +113,10 @@ class SimpleShell
   class Command
     attr_reader :out, :err, :S
 
-    def initialize(base, env={})
-      @base = base
-      @env  = env
+    def initialize(shell)
+      @shell = shell
+      @base  = shell.base
+      @env   = shell.env || {}
 
       @out = ""
       @err = ""
